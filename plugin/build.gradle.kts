@@ -62,9 +62,14 @@ fun d8(vararg args: String) {
 }
 
 tasks.register("build-dex") {
-    dependsOn("build")
+    dependsOn("assembleRelease")
 
     doLast {
+        if (androidHome == null) {
+            println("Skipping build-dex: ANDROID_HOME or ANDROID_SDK_ROOT not set.")
+            return@doLast
+        }
+
         if (!File(d8Bin).canExecute()) {
             file(d8Bin).setExecutable(true)
         }
