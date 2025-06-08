@@ -34,11 +34,8 @@ jobs:
       - name: Build Dex
         run: chmod 755 ./gradlew && ./gradlew --no-daemon build-dex
 
-      - name: List output dir
-        run: ls -alh build/
-
       - name: Upload classes.dex Artifact
         uses: actions/upload-artifact@v4
         with:
           name: webui-plugin-dex
-          path: build/classes.dex
+          path: /home/runner/work/WXT/WXT/plugin/build/classes.dex
