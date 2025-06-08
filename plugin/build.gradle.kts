@@ -62,7 +62,7 @@ fun d8(vararg args: String) {
 }
 
 tasks.register("build-dex") {
-    dependsOn("assembleRelease")
+    dependsOn("build")
 
     doLast {
         if (androidHome == null) {
