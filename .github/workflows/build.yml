@@ -32,4 +32,4 @@ jobs:
         run: sdkmanager "build-tools;34.0.0" "platforms;android-35"
 
       - name: Build Dex
-        run: ./gradlew build-dex
+        run: chmod 755 ./gradlew && ./gradlew build-dex
