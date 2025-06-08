@@ -68,8 +68,8 @@ tasks.register("build-dex") {
         if (!File(d8Bin).canExecute()) {
             file(d8Bin).setExecutable(true)
         }
-
-        d8(classesJar.absolutePath)
+                
+        d8("--output", buildDir.absolutePath, classesJar.absolutePath)
 
         println("DEX file created at: $dexOutput")
     }
