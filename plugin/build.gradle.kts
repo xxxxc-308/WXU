@@ -46,37 +46,31 @@ dependencies {
     compileOnly("com.github.MMRLApp.MMRL:platform:v33773")
 }
 
-/*val androidHome: String = System.getenv("ANDROID_HOME")
+val androidHome: String? = System.getenv("ANDROID_HOME")
+    ?: System.getenv("ANDROID_SDK_ROOT")
 
-val d8Bin: String = "$androidHome/build-tools/34.0.0/d8.bat"
-val adbBin: String = "$androidHome/platform-tools/adb.exe"
+val d8Bin = "$androidHome/build-tools/34.0.0/d8"
 val buildDir: File = project.layout.buildDirectory.get().asFile
 
-fun adbPush(vararg cmd: String) {
+val classesJar = buildDir.resolve("intermediates/aar_main_jar/release/syncReleaseLibJars/classes.jar")
+val dexOutput = buildDir.resolve("classes.dex")
+
+fun d8(vararg args: String) {
     exec {
-        commandLine(android.adbExecutable.path, "push", *cmd)
+        commandLine(d8Bin, *args)
     }
 }
-
-fun adbRootShell(vararg cmd: String) {
-    exec {
-        commandLine(android.adbExecutable.path, "shell", "su", "-c", "\"${cmd.joinToString(" ")}\"")
-    }
-}
-
-fun d8(vararg cmd: String) {
-    exec {
-        commandLine(d8Bin, *cmd)
-    }
-}
-
-val classes = buildDir.resolve("intermediates/aar_main_jar/release/syncReleaseLibJars/classes.jar")
 
 tasks.register("build-dex") {
     dependsOn("build")
 
     doLast {
-        d8("--output=$buildDir", classes.path)
-        adbPush("$buildDir/classes.dex", "/data/adb/modules/bindhosts/webroot/plugins/webui-plugin.dex")
+        if (!File(d8Bin).canExecute()) {
+            file(d8Bin).setExecutable(true)
+        }
+
+        d8("--output=${buildDir.absolutePath}", classesJar.absolutePath)
+
+        println("DEX file created at: $dexOutput")
     }
-}*/
+}
