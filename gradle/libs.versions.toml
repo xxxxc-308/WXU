@@ -1,9 +1,13 @@
 [versions]
 agp = "8.5.1"
 gradle = "8.1.4"
+platform = "v33773"
+webuiXPortable = "v61"
 
 [libraries]
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+mmrl-platform = { module = "com.github.MMRLApp.MMRL:platform", version.ref = "platform" }
+webui-x-portable = { module = "com.github.MMRLApp:WebUI-X-Portable", version.ref = "webuiXPortable" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

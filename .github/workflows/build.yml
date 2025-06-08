@@ -33,3 +33,9 @@ jobs:
 
       - name: Build Dex
         run: chmod 755 ./gradlew && ./gradlew build-dex
+
+      - name: Upload classes.dex Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: webui-plugin-dex
+          path: build/classes.dex

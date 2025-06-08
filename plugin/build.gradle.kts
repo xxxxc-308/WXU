@@ -42,8 +42,8 @@ android {
 }
 
 dependencies {
-    compileOnly("com.github.MMRLApp:WebUI-X-Portable:v61")
-    compileOnly("com.github.MMRLApp.MMRL:platform:v33773")
+    compileOnly(libs.webui.x.portable)
+    compileOnly(libs.mmrl.platform)
 }
 
 val androidHome: String? = System.getenv("ANDROID_HOME")
