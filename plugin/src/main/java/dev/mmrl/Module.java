@@ -10,6 +10,11 @@ public class Module extends WXInterface {
         super(wxOptions);
     }
 
+    @Override
+    public String getName() {
+        return "module";
+    }
+    
     @JavascriptInterface
     public String getId() {
         return this.getModId().toString();
