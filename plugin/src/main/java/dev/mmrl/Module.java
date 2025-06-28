@@ -2,6 +2,8 @@ package dev.mmrl;
 
 import android.webkit.JavascriptInterface;
 
+import com.dergoogler.mmrl.platform.model.ModId;
+
 import com.dergoogler.mmrl.webui.interfaces.WXInterface;
 import com.dergoogler.mmrl.webui.interfaces.WXOptions;
 
@@ -22,10 +24,11 @@ public class Module extends WXInterface {
 
     @JavascriptInterface
     public String getAdbDir() {
-        return this.getModId().getAdbDir().getPath();
+        ModId id = this.getModId();
+        ModId.getAdbDir(id).getPath();
     }
 
-    @JavascriptInterface
+  /*  @JavascriptInterface
     public String getConfigDir() {
         return this.getModId().getConfigDir().getPath();
     }
@@ -58,5 +61,5 @@ public class Module extends WXInterface {
     @JavascriptInterface
     public String getPropFile() {
         return this.getModId().getAdbDir().getPath();
-    }
+    }*/
 }
