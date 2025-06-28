@@ -25,7 +25,7 @@ public class Module extends WXInterface {
     @JavascriptInterface
     public String getAdbDir() {
         ModId id = this.getModId();
-        ModId.getAdbDir(id).getPath();
+        ModId.Companion.getAdbDir(id).getPath();
     }
 
   /*  @JavascriptInterface
