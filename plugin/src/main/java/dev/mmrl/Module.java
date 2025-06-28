@@ -19,4 +19,44 @@ public class Module extends WXInterface {
     public String getId() {
         return this.getModId().toString();
     }
+
+    @JavascriptInterface
+    public String getAdbDir() {
+        return this.getModId().getAdbDir().getPath();
+    }
+
+    @JavascriptInterface
+    public String getConfigDir() {
+        return this.getModId().getConfigDir().getPath();
+    }
+
+    @JavascriptInterface
+    public String getModuleConfigDir() {
+        return this.getModId().getModuleConfigDir().getPath();
+    }
+    
+    @JavascriptInterface
+    public String getModulesDir() {
+        return this.getModId().getModulesDir().getPath();
+    }
+    
+    @JavascriptInterface
+    public String getModuleDir() {
+        return this.getModId().getModuleDir().getPath();
+    }
+    
+    @JavascriptInterface
+    public String getWebRootDir() {
+        return this.getModId().getWebrootDir().getPath();
+    }
+    
+    @JavascriptInterface
+    public String getSystemDir() {
+        return this.getModId().getSystemDir().getPath();
+    }
+    
+    @JavascriptInterface
+    public String getPropFile() {
+        return this.getModId().getAdbDir().getPath();
+    }
 }
