@@ -2,15 +2,32 @@ package dev.mmrl;
 
 import android.webkit.JavascriptInterface;
 
+import com.dergoogler.mmrl.platform.file.SuFile;
 import com.dergoogler.mmrl.platform.model.ModId;
 import com.dergoogler.mmrl.webui.interfaces.WXInterface;
 import com.dergoogler.mmrl.webui.interfaces.WXOptions;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Module extends WXInterface {
+    private final ModId modId;
+    private final SuFile webrootDir;
+    private final SuFile moduleDir;
+    private final SuFile moduleConfigDir;
+    private final SuFile systemDir;
+
+
     public Module(WXOptions wxOptions) {
         super(wxOptions);
+
+        this.modId = this.getModId();
+        this.webrootDir = ModId.Companion.getWebrootDir(modId);
+        this.moduleDir = ModId.Companion.getModuleDir(modId);
+        this.moduleConfigDir = ModId.Companion.getModuleConfigDir(modId);
+        this.systemDir = ModId.Companion.getSystemDir(modId);
     }
 
+    @NotNull
     @Override
     public String getName() {
         return "module";
@@ -18,54 +35,70 @@ public class Module extends WXInterface {
 
     @JavascriptInterface
     public String getId() {
-        return this.getModId().toString();
+        return modId.toString();
     }
 
     @JavascriptInterface
     public String getAdbDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getAdbDir(id).getPath();
+        return ModId.Companion.getAdbDir(modId).getPath();
     }
 
     @JavascriptInterface
     public String getConfigDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getConfigDir(id).getPath();
+        return ModId.Companion.getConfigDir(modId).getPath();
     }
 
     @JavascriptInterface
     public String getModuleConfigDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getModuleConfigDir(id).getPath();
+        return moduleConfigDir.getPath();
+    }
+
+    @JavascriptInterface
+    public String getModuleConfigDir(String... paths) {
+        SuFile file = new SuFile(moduleConfigDir, paths);
+        return file.getPath();
     }
 
     @JavascriptInterface
     public String getModulesDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getModulesDir(id).getPath();
+        return ModId.Companion.getModulesDir(modId).getPath();
     }
 
     @JavascriptInterface
     public String getModuleDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getModuleDir(id).getPath();
+        return moduleDir.getPath();
+    }
+
+    @JavascriptInterface
+    public String getModuleDir(String... paths) {
+        SuFile file = new SuFile(moduleDir, paths);
+        return file.getPath();
     }
 
     @JavascriptInterface
     public String getWebRootDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getWebrootDir(id).getPath();
+        return webrootDir.getPath();
+    }
+
+    @JavascriptInterface
+    public String getWebRootDir(String... paths) {
+        SuFile file = new SuFile(webrootDir, paths);
+        return file.getPath();
     }
 
     @JavascriptInterface
     public String getSystemDir() {
-        ModId id = this.getModId();
-        return ModId.Companion.getSystemDir(id).getPath();
+        return systemDir.getPath();
+    }
+
+    @JavascriptInterface
+    public String getSystemDir(String... paths) {
+        SuFile file = new SuFile(systemDir, paths);
+        return file.getPath();
     }
 
     @JavascriptInterface
     public String getPropFile() {
-        ModId id = this.getModId();
-        return ModId.Companion.getAdbDir(id).getPath();
+        return ModId.Companion.getAdbDir(modId).getPath();
     }
 }

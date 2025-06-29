@@ -22,6 +22,7 @@ Here's an example of what your `config.json` file should look like:
 {
   "dexFiles": [
     {
+      "type": "dex",
       "path": "plugins/webui.dex",
       "className": "dev.mmrl.Module"
     }
