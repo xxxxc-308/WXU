@@ -21,7 +21,7 @@ interface Reflect {
    *
    * @example
    * // Get a reference to the java.io.File class
-   * const fileClassId = window.myJavaReflector.getClass('java.io.File');
+   * const fileClassId = global.require("wx:reflect").getClass('java.io.File');
    *
    * @param {string} className - The fully qualified name of the Java class to look up (e.g., "java.lang.String").
    * @returns {string | null} A string identifier representing the class, which can be used in
@@ -38,11 +38,11 @@ interface Reflect {
    * method name like "<init>".
    *
    * @example
-   * const fileClassId = window.myJavaReflector.getClass('java.io.File');
+   * const fileClassId = global.require("wx:reflect").getClass('java.io.File');
    * if (fileClassId) {
    * // This assumes a constructor that takes a string. We'll use callMethod for that.
    * // For a no-arg constructor:
-   * // const fileObjectId = window.myJavaReflector.newInstance(fileClassId);
+   * // const fileObjectId = global.require("wx:reflect").newInstance(fileClassId);
    * }
    *
    * @param {string} classId - The string identifier for the class, previously obtained from `getClass`.
@@ -62,7 +62,7 @@ interface Reflect {
    * // Assuming 'fileObject' is an instance of java.io.File with a path
    * const objectId = ...; // ID for a File object
    * const args = JSON.stringify([]); // No arguments for getAbsolutePath
-   * const absolutePath = window.myJavaReflector.callMethod(objectId, 'getAbsolutePath', args);
+   * const absolutePath = global.require("wx:reflect").callMethod(objectId, 'getAbsolutePath', args);
    * console.log('The absolute path is:', absolutePath);
    *
    * @param {string} objectId - The identifier of the object instance on which to invoke the method.
@@ -90,7 +90,7 @@ interface Reflect {
    * // This is less common as fields are often private. But for a public field:
    * // class MyObject { public String publicName = "Test"; }
    * const myObjectId = ...;
-   * const name = window.myJavaReflector.getField(myObjectId, 'publicName'); // Returns "Test"
+   * const name = global.require("wx:reflect").getField(myObjectId, 'publicName'); // Returns "Test"
    *
    * @param {string} objectId - The identifier of the object instance.
    * @param {string} fieldName - The name of the field whose value is to be retrieved.
@@ -105,7 +105,7 @@ interface Reflect {
    * @example
    * // class MyObject { public String publicName = "Test"; }
    * const myObjectId = ...;
-   * const success = window.myJavaReflector.setField(myObjectId, 'publicName', 'New Value');
+   * const success = global.require("wx:reflect").setField(myObjectId, 'publicName', 'New Value');
    * // success will be true
    *
    * @param {string} objectId - The identifier of the object instance.
@@ -125,7 +125,7 @@ interface Reflect {
    * @example
    * const objectId = ...;
    * // ... use the object ...
-   * window.myJavaReflector.releaseObject(objectId); // Clean up
+   * global.require("wx:reflect").releaseObject(objectId); // Clean up
    *
    * @param {string} objectId - The identifier of the object to release.
    * @returns {boolean} `true` if the object reference was found and successfully removed;
