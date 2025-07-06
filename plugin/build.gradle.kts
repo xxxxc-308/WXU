@@ -10,6 +10,26 @@ android {
     defaultConfig {
         minSdk = 21
         multiDexEnabled = false
+
+        ndk {
+            abiFilters += arrayOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+        }
+
+        externalNativeBuild {
+            cmake {
+                arguments += listOf(
+                    "-DANDROID_STL=c++_static",
+                    "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                )
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/jni/CMakeLists.txt")
+            version = "3.22.1"
+        }
     }
 
     buildTypes {
@@ -72,6 +92,12 @@ fun d8(vararg args: String) {
     }
 }
 
+fun findLatestSoFile(): File? {
+    return buildDir.resolve("intermediates/cxx/Debug").walkTopDown()
+        .filter { it.isFile && it.name == "libnative.so" && "arm64-v8a" in it.path }
+        .maxByOrNull { it.lastModified() }
+}
+
 tasks.register("build-dex") {
     doFirst {
         if (classesOutput.exists()) {
@@ -104,6 +130,17 @@ tasks.register("build-dex") {
 
         if (classesOutput.renameTo(dexOutput)) {
             println("DEX file created at: $dexOutput")
+        }
+
+        val latestSo = findLatestSoFile()
+        if (latestSo != null) {
+            println("Latest .so file found at: ${latestSo.absolutePath}")
+            val copyTo = buildDir.resolve("libnative.so")
+            copyTo.parentFile.mkdirs()
+            latestSo.copyTo(copyTo, overwrite = true)
+            println("Copied .so to: $copyTo")
+        } else {
+            println("No .so file found in intermediates.")
         }
     }
 }

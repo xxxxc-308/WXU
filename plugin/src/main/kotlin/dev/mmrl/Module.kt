@@ -22,10 +22,10 @@ class Module(wxOptions: WXOptions) : WXInterface(wxOptions) {
     val adbDir: String = modId.adbDir.path
 
     @get:JavascriptInterface
-    val configDir: String=modId.configDir.path
+    val configDir: String = modId.configDir.path
 
     @JavascriptInterface
-    fun getModuleConfigDir(): String =modId.moduleConfigDir.path
+    fun getModuleConfigDir(): String = modId.moduleConfigDir.path
 
 //    @JavascriptInterface
 //    fun getModuleConfigDir(vararg paths: String?): String {
@@ -34,7 +34,7 @@ class Module(wxOptions: WXOptions) : WXInterface(wxOptions) {
 //    }
 
     @get:JavascriptInterface
-    val modulesDir: String=modId.modulesDir.path
+    val modulesDir: String = modId.modulesDir.path
 
     @JavascriptInterface
     fun getModuleDir(): String = modId.moduleDir.path
