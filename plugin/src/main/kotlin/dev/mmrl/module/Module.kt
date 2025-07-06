@@ -24,44 +24,20 @@ class Module(wxOptions: WXOptions) : WXInterface(wxOptions) {
     @get:JavascriptInterface
     val configDir: String = modId.configDir.path
 
-    @JavascriptInterface
-    fun getModuleConfigDir(): String = modId.moduleConfigDir.path
-
-//    @JavascriptInterface
-//    fun getModuleConfigDir(vararg paths: String?): String {
-//        val file = SuFile(moduleConfigDir, paths)
-//        return file.getPath()
-//    }
+    @get:JavascriptInterface
+    val moduleConfigDir: String = modId.moduleConfigDir.path
 
     @get:JavascriptInterface
     val modulesDir: String = modId.modulesDir.path
 
-    @JavascriptInterface
-    fun getModuleDir(): String = modId.moduleDir.path
-
-//    @JavascriptInterface
-//    fun getModuleDir(vararg paths: String?): String {
-//        val file = SuFile(moduleDir, paths)
-//        return file.getPath()
-//    }
+    @get:JavascriptInterface
+    val moduleDir: String = modId.moduleDir.path
 
     @get:JavascriptInterface
     val webRootDir: String = modId.webrootDir.path
 
-//    @JavascriptInterface
-//    fun getWebRootDir(vararg paths: String?): String {
-//        val file = SuFile(webrootDir, paths)
-//        return file.getPath()
-//    }
-
-    @JavascriptInterface
-    fun getSystemDir(): String = modId.systemDir.path
-
-//    @JavascriptInterface
-//    fun getSystemDir(vararg paths: String?): String {
-//        val file = SuFile(systemDir, paths)
-//        return file.getPath()
-//    }
+    @get:JavascriptInterface
+    val systemDir: String = modId.systemDir.path
 
     @get:JavascriptInterface
     val propFile: String = modId.propFile.path

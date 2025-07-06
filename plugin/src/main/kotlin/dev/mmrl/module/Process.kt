@@ -8,7 +8,7 @@ import com.dergoogler.mmrl.webui.interfaces.WXOptions
 
 class Process(wxOptions: WXOptions) : WXInterface(wxOptions) {
     @get:JavascriptInterface
-    val getPlatform = options.platform.name
+    val platform = options.platform.name
 
     @get:JavascriptInterface
     val isAlive: Boolean = options.isProviderAlive

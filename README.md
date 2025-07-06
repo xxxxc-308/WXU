@@ -29,3 +29,21 @@ Here's an example of what your `config.json` file should look like:
   ]
 }
 ```
+
+## Usage
+
+```ts
+type Module = FileSystem | Reflect | Process | Module;
+
+interface Global {
+  require(module: string): Module;
+}
+
+// Why `var`? Because this is not a `const` and can be changed at runtime from the JavaScript side
+declare var global: Global;
+
+const fs: FileSystem = global.require("wx:fs");
+const reflect: Reflect = global.require("wx:reflect");
+const process: Process = global.require("wx:process");
+const module: Module = global.require("wx:module");
+```
