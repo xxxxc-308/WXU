@@ -43,5 +43,5 @@ jobs:
       - name: Upload classes.dex Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: webui-plugin-dex
-          path: /home/runner/work/WXU/WXU/plugin/build/classes.dex
+          name: wxu-plugin-dex
+          path: /home/runner/work/WXU/WXU/plugin/build/wxu.dex
