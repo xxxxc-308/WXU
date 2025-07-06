@@ -35,7 +35,7 @@ jobs:
         run: yes | sdkmanager --licenses
 
       - name: Install Build Tools
-        run: sdkmanager "build-tools;34.0.0" "platforms;android-35"
+        run: sdkmanager "build-tools;35.0.0" "platforms;android-35"
 
       - name: Build Dex
         run: chmod 755 ./gradlew && ./gradlew --no-daemon build-dex
