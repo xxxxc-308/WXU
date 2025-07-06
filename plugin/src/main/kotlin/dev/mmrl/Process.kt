@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package dev.mmrl
 
 import android.webkit.JavascriptInterface

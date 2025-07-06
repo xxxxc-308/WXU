@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package dev.mmrl
 
 import android.webkit.JavascriptInterface
@@ -6,7 +8,7 @@ import com.dergoogler.mmrl.webui.interfaces.WXOptions
 import org.json.JSONArray
 import java.lang.reflect.InvocationTargetException
 
-class Reflection(wxOptions: WXOptions): WXInterface(wxOptions) {
+class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
     private val objectStore = mutableMapOf<String, Any>()
     private var objectCounter = 0
 
