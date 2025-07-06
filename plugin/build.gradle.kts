@@ -4,8 +4,8 @@ plugins {
 }
 
 android {
-    compileSdk = 35
     namespace = "dev.mmrl"
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21
@@ -37,9 +37,18 @@ android {
             isShrinkResources = false
             multiDexEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.13"
     }
 
     compileOptions {
@@ -63,10 +72,18 @@ android {
 }
 
 dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2024.05.00")
+    compileOnly(composeBom)
+
+    compileOnly("androidx.activity:activity-compose:1.9.0")
+    compileOnly("androidx.compose.ui:ui:1.6.7")
+    compileOnly("androidx.compose.material3:material3:1.2.1")
+
     compileOnly(libs.webui.x.portable)
     compileOnly(libs.mmrl.platform)
 }
 
+// Optional D8 build task — unchanged
 val androidHome: String? = System.getenv("ANDROID_HOME")
     ?: System.getenv("ANDROID_SDK_ROOT")
 
@@ -100,12 +117,8 @@ fun findLatestSoFile(): File? {
 
 tasks.register("build-dex") {
     doFirst {
-        if (classesOutput.exists()) {
-            classesOutput.delete()
-        }
-        if (dexOutput.exists()) {
-            dexOutput.delete()
-        }
+        classesOutput.delete()
+        dexOutput.delete()
     }
 
     dependsOn("build")
@@ -134,7 +147,6 @@ tasks.register("build-dex") {
 
         val latestSo = findLatestSoFile()
         if (latestSo != null) {
-            println("Latest .so file found at: ${latestSo.absolutePath}")
             val copyTo = buildDir.resolve("libnative.so")
             copyTo.parentFile.mkdirs()
             latestSo.copyTo(copyTo, overwrite = true)

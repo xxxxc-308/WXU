@@ -5,6 +5,7 @@ package dev.mmrl
 import android.webkit.JavascriptInterface
 import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
+import dev.mmrl.module.Dialog
 import dev.mmrl.module.FileSystem
 import dev.mmrl.module.Module
 import dev.mmrl.module.Process
@@ -29,6 +30,7 @@ class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
         "reflect" to Reflection::class.java,
         "module" to Module::class.java,
         "process" to Process::class.java,
+        "dialog" to Dialog::class.java
     )
 
     private fun wxRequire(module: String): Any? {
