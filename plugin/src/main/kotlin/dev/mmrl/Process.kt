@@ -7,12 +7,9 @@ import com.dergoogler.mmrl.webui.interfaces.WXOptions
 class Process(wxOptions: WXOptions) : WXInterface(wxOptions) {
     override var name: String = "process"
 
-    @JavascriptInterface
-    fun platform(): String {
-        return options.platform.name
-    }
+    @get:JavascriptInterface
+    val getPlatform = options.platform.name
 
     @get:JavascriptInterface
-    val isAlive: Boolean
-        get() = options.isProviderAlive
+    val isAlive: Boolean = options.isProviderAlive
 }

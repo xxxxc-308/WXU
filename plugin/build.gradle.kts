@@ -73,6 +73,15 @@ fun d8(vararg args: String) {
 }
 
 tasks.register("build-dex") {
+    doFirst {
+        if (classesOutput.exists()) {
+            classesOutput.delete()
+        }
+        if (dexOutput.exists()) {
+            dexOutput.delete()
+        }
+    }
+
     dependsOn("build")
 
     doLast {
