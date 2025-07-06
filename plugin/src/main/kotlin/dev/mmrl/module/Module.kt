@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package dev.mmrl
+package dev.mmrl.module
 
 import android.webkit.JavascriptInterface
 import com.dergoogler.mmrl.platform.model.ModId.Companion.adbDir
@@ -15,8 +15,6 @@ import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
 
 class Module(wxOptions: WXOptions) : WXInterface(wxOptions) {
-    override var name: String = "module"
-
     @get:JavascriptInterface
     val id: String = modId.toString()
 

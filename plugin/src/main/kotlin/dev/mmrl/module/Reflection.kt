@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package dev.mmrl
+package dev.mmrl.module
 
 import android.webkit.JavascriptInterface
 import com.dergoogler.mmrl.webui.interfaces.WXInterface
@@ -11,8 +11,6 @@ import java.lang.reflect.InvocationTargetException
 class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
     private val objectStore = mutableMapOf<String, Any>()
     private var objectCounter = 0
-
-    override var name: String = "reflection"
 
     private fun storeObject(obj: Any): String {
         val id = "obj_${objectCounter++}"
