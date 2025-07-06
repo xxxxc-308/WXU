@@ -12,4 +12,7 @@ class Process(wxOptions: WXOptions) : WXInterface(wxOptions) {
 
     @get:JavascriptInterface
     val isAlive: Boolean = options.isProviderAlive
+
+    @get:JavascriptInterface
+    val applicationLibraryDir: String? = context.applicationInfo.nativeLibraryDir
 }
