@@ -32,6 +32,8 @@ Here's an example of what your `config.json` file should look like:
 
 ## Usage
 
+[Types Folder](./types)
+
 ```ts
 type Module = FileSystem | Reflect | Process | Module;
 
