@@ -50,13 +50,23 @@ dependencies {
 val androidHome: String? = System.getenv("ANDROID_HOME")
     ?: System.getenv("ANDROID_SDK_ROOT")
 
-val d8Bin = "$androidHome/build-tools/34.0.0/d8"
+val isWindows = System.getProperty("os.name").lowercase().contains("win")
+
+val d8Bin = androidHome?.let {
+    File(it, "build-tools/35.0.0/d8" + if (isWindows) ".bat" else "").absolutePath
+}
+
 val buildDir: File = project.layout.buildDirectory.get().asFile
 
-val classesJar = buildDir.resolve("intermediates/aar_main_jar/release/syncReleaseLibJars/classes.jar")
-val dexOutput = buildDir.resolve("classes.dex")
+val classesJar =
+    buildDir.resolve("intermediates/aar_main_jar/release/syncReleaseLibJars/classes.jar")
+val classesOutput = buildDir.resolve("classes.dex")
+val dexOutput = buildDir.resolve("wxu.dex")
 
 fun d8(vararg args: String) {
+    if (d8Bin == null) {
+        error("ANDROID_HOME or ANDROID_SDK_ROOT not set. Cannot locate d8.")
+    }
     exec {
         commandLine(d8Bin, *args)
     }
@@ -66,17 +76,25 @@ tasks.register("build-dex") {
     dependsOn("build")
 
     doLast {
-        if (androidHome == null) {
+        if (d8Bin == null) {
             println("Skipping build-dex: ANDROID_HOME or ANDROID_SDK_ROOT not set.")
             return@doLast
         }
 
-        if (!File(d8Bin).canExecute()) {
-            file(d8Bin).setExecutable(true)
+        val d8File = File(d8Bin)
+        if (!d8File.exists()) {
+            println("Skipping build-dex: d8 not found at $d8Bin")
+            return@doLast
         }
-                
+
+        if (!d8File.canExecute()) {
+            d8File.setExecutable(true)
+        }
+
         d8("--output", buildDir.absolutePath, classesJar.absolutePath)
 
-        println("DEX file created at: $dexOutput")
+        if (classesOutput.renameTo(dexOutput)) {
+            println("DEX file created at: $dexOutput")
+        }
     }
 }
