@@ -9,6 +9,7 @@ import dev.mmrl.module.FileSystem
 import dev.mmrl.module.Module
 import dev.mmrl.module.Process
 import dev.mmrl.module.Reflection
+import kotlin.reflect.KClass
 
 class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
     override var name = "global"
@@ -23,12 +24,20 @@ class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
         return null
     }
 
+    private val modules: List<Pair<String, Class<out WXInterface>>> = listOf(
+        "fs" to FileSystem::class.java,
+        "reflect" to Reflection::class.java,
+        "module" to Module::class.java,
+        "process" to Process::class.java,
+    )
+
     private fun wxRequire(module: String): Any? {
-        when (module) {
-            "fs" -> return FileSystem(wxOptions)
-            "reflect" -> return Reflection(wxOptions)
-            "module" -> return Module(wxOptions)
-            "process" -> return Process(wxOptions)
+        for ((name, clazz) in modules) {
+            if (module == name) {
+                return clazz.getDeclaredConstructor(WXOptions::class.java).newInstance(wxOptions)
+            }
+
+            continue
         }
 
         console.error("Unknown wx module: $module")
