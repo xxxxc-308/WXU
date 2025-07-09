@@ -38,7 +38,7 @@ Here's an example of what your `config.json` file should look like:
 type Module = FileSystem | Reflect | Process | Module;
 
 interface Global {
-  require(module: string): Module;
+  require(module: string): Module | null;
 }
 
 // Why `var`? Because this is not a `const` and can be changed at runtime from the JavaScript side
