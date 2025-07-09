@@ -30,15 +30,71 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
     }
 
     @JavascriptInterface
-    fun newInstance(classId: String): String? {
+    fun newInstance(classId: String, argsJson: String? = null): String? {
         return try {
-            val clazz = objectStore[classId] as? Class<*>
-                ?: return null
-            val instance = clazz.getDeclaredConstructor().newInstance()
-            storeObject(instance)
+            val clazz = objectStore[classId] as? Class<*> ?: return null
+
+            if (argsJson == null || argsJson == "null") {
+                val instance = clazz.getDeclaredConstructor().newInstance()
+                storeObject(instance)
+            } else {
+                val argsArray = JSONArray(argsJson)
+                val rawArgs = Array(argsArray.length()) { i -> argsArray.get(i) }
+
+                val constructors = clazz.declaredConstructors
+
+                val constructor = constructors.firstOrNull { ctor ->
+                    ctor.parameterTypes.size == rawArgs.size &&
+                            ctor.parameterTypes.withIndex().all { (i, paramType) ->
+                                try {
+                                    isTypeCompatible(paramType, rawArgs[i])
+                                } catch (t: Throwable) {
+                                    false
+                                }
+                            }
+                } ?: return null
+
+                val coercedArgs = constructor.parameterTypes.mapIndexed { i, type ->
+                    coerceArg(type, rawArgs[i])
+                }.toTypedArray()
+
+                val instance = constructor.newInstance(*coercedArgs)
+                storeObject(instance)
+            }
+        } catch (t: InvocationTargetException) {
+            console.error(t.targetException ?: t)
+            null
         } catch (t: Throwable) {
             console.error(t)
             null
+        }
+    }
+
+    private fun isTypeCompatible(type: Class<*>, value: Any): Boolean {
+        return when {
+            type.isInstance(value) -> true
+            value is String && value.startsWith("obj_") -> {
+                val obj = objectStore[value]
+                obj != null && type.isInstance(obj)
+            }
+            type == Char::class.javaPrimitiveType -> value is String && value.length == 1
+            type == Int::class.javaPrimitiveType -> value is Number
+            type == Float::class.javaPrimitiveType -> value is Number
+            type == Double::class.javaPrimitiveType -> value is Number
+            type == Boolean::class.javaPrimitiveType -> value is Boolean
+            else -> false
+        }
+    }
+
+    private fun coerceArg(type: Class<*>, raw: Any): Any? {
+        return when {
+            raw is String && raw.startsWith("obj_") -> objectStore[raw]
+            type == Char::class.javaPrimitiveType -> (raw as String)[0]
+            type == Int::class.javaPrimitiveType -> (raw as Number).toInt()
+            type == Float::class.javaPrimitiveType -> (raw as Number).toFloat()
+            type == Double::class.javaPrimitiveType -> (raw as Number).toDouble()
+            type == Boolean::class.javaPrimitiveType -> raw as Boolean
+            else -> raw
         }
     }
 
@@ -54,14 +110,7 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
                 m.parameterTypes.size == rawArgs.size &&
                         m.parameterTypes.withIndex().all { (i, type) ->
                             try {
-                                when (type) {
-                                    Char::class.javaPrimitiveType -> rawArgs[i] is String && (rawArgs[i] as String).length == 1
-                                    Int::class.javaPrimitiveType -> rawArgs[i] is Number
-                                    Double::class.javaPrimitiveType -> rawArgs[i] is Number
-                                    Float::class.javaPrimitiveType -> rawArgs[i] is Number
-                                    Boolean::class.javaPrimitiveType -> rawArgs[i] is Boolean
-                                    else -> type.isInstance(rawArgs[i])
-                                }
+                                isTypeCompatible(type, rawArgs[i])
                             } catch (t: Throwable) {
                                 false
                             }
@@ -69,20 +118,7 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
             } ?: return null
 
             val coercedArgs = method.parameterTypes.mapIndexed { i, type ->
-                val raw = rawArgs[i]
-                try {
-                    when (type) {
-                        Char::class.javaPrimitiveType -> (raw as String)[0]
-                        Int::class.javaPrimitiveType -> (raw as Number).toInt()
-                        Double::class.javaPrimitiveType -> (raw as Number).toDouble()
-                        Float::class.javaPrimitiveType -> (raw as Number).toFloat()
-                        Boolean::class.javaPrimitiveType -> raw as Boolean
-                        else -> raw
-                    }
-                } catch (t: Throwable) {
-                    console.error(t)
-                    return null
-                }
+                coerceArg(type, rawArgs[i])
             }.toTypedArray()
 
             val result = method.invoke(obj, *coercedArgs)
@@ -124,7 +160,7 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
             val obj = objectStore[objectId] ?: return false
             val field = obj.javaClass.getDeclaredField(fieldName)
             field.isAccessible = true
-            field.set(obj, value)  // You might want to add type coercion here later
+            field.set(obj, value)  // Type coercion can be added here
             true
         } catch (t: Throwable) {
             console.error(t)
