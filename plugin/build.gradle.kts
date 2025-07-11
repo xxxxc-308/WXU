@@ -170,7 +170,11 @@ tasks.register("build-dex") {
             copyTo.parentFile.mkdirs()
             latestSo.copyTo(copyTo, overwrite = true)
             println("Copied .so to: $copyTo")
-
+            adb(
+                "push",
+                latestSo.absolutePath,
+                "/data/adb/modules/mmrl_wpd/webroot/shared/libnative.so"
+            )
         } else {
             println("No .so file found in intermediates.")
         }

@@ -13,8 +13,11 @@ import com.dergoogler.mmrl.platform.model.ModId.Companion.systemDir
 import com.dergoogler.mmrl.platform.model.ModId.Companion.webrootDir
 import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
+import dev.mmrl.internal.WXUInterface
 
-class Module(wxOptions: WXOptions) : WXInterface(wxOptions) {
+class Module(wxOptions: WXOptions) : WXUInterface(wxOptions) {
+    override var name = "module"
+
     @get:JavascriptInterface
     val id: String = modId.toString()
 

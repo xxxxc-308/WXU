@@ -5,10 +5,13 @@ package dev.mmrl.module
 import android.webkit.JavascriptInterface
 import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
+import dev.mmrl.internal.WXUInterface
 import org.json.JSONArray
 import java.lang.reflect.InvocationTargetException
 
-class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
+class Reflection(wxOptions: WXOptions) : WXUInterface(wxOptions) {
+    override var name = "reflect"
+
     private val objectStore = mutableMapOf<String, Any>()
     private var objectCounter = 0
 

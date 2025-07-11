@@ -8,9 +8,12 @@ import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
 
 import dev.mmrl.internal.FileSystemInstance
+import dev.mmrl.internal.WXUInterface
 
 
-class FileSystem(wxOptions: WXOptions) : WXInterface(wxOptions) {
+class FileSystem(wxOptions: WXOptions) : WXUInterface(wxOptions) {
+    override var name = "fs"
+
     @JavascriptInterface
     fun newInstance(path: String): FileSystemInstance? {
         try {
