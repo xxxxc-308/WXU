@@ -18,6 +18,8 @@ import dev.mmrl.internal.WXUInterface
 class Dialog(wxOptions: WXOptions) : WXUInterface(wxOptions) {
     override var name = "dialog"
 
+
+
     @JavascriptInterface
     fun show() {
         val act = activity

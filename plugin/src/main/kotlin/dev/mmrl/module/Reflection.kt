@@ -9,12 +9,12 @@ import dev.mmrl.internal.WXUInterface
 import org.json.JSONArray
 import java.lang.reflect.InvocationTargetException
 
+val objectStore = mutableMapOf<String, Any>()
+var objectCounter = 0
+
 class Reflection(wxOptions: WXOptions) : WXUInterface(wxOptions) {
     override var name = "reflect"
-
-    private val objectStore = mutableMapOf<String, Any>()
-    private var objectCounter = 0
-
+    
     private fun storeObject(obj: Any): String {
         val id = "obj_${objectCounter++}"
         objectStore[id] = obj
