@@ -30,11 +30,11 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
     }
 
     @JavascriptInterface
-    fun newInstance(classId: String, argsJson: String? = null): String? {
+    fun newInstance(classId: String, argsJson: String?): String? {
         return try {
             val clazz = objectStore[classId] as? Class<*> ?: return null
 
-            if (argsJson == null || argsJson == "null") {
+            if (argsJson.isNullOrBlank() || argsJson == "null") {
                 val instance = clazz.getDeclaredConstructor().newInstance()
                 storeObject(instance)
             } else {
@@ -44,8 +44,9 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
                 val constructors = clazz.declaredConstructors
 
                 val constructor = constructors.firstOrNull { ctor ->
-                    ctor.parameterTypes.size == rawArgs.size &&
-                            ctor.parameterTypes.withIndex().all { (i, paramType) ->
+                    val paramTypes = ctor.parameterTypes
+                    paramTypes.size == rawArgs.size &&
+                            paramTypes.withIndex().all { (i, paramType) ->
                                 try {
                                     isTypeCompatible(paramType, rawArgs[i])
                                 } catch (t: Throwable) {
@@ -99,42 +100,61 @@ class Reflection(wxOptions: WXOptions) : WXInterface(wxOptions) {
     }
 
     @JavascriptInterface
-    fun callMethod(objectId: String, methodName: String, argsJson: String): String? {
+    fun callMethod(objectId: String, methodName: String, argsJson: String?): String? {
         return try {
             val obj = objectStore[objectId] ?: return null
-            val args = JSONArray(argsJson)
-            val rawArgs = Array(args.length()) { i -> args.get(i) }
-            val methods = obj.javaClass.methods.filter { it.name == methodName }
 
-            val method = methods.firstOrNull { m ->
-                m.parameterTypes.size == rawArgs.size &&
-                        m.parameterTypes.withIndex().all { (i, type) ->
-                            try {
-                                isTypeCompatible(type, rawArgs[i])
-                            } catch (t: Throwable) {
-                                false
-                            }
+            val candidateMethods = obj.javaClass.methods.filter { it.name == methodName }
+
+            if (argsJson.isNullOrBlank()) {
+                // No args case: find method with zero parameters
+                val method = candidateMethods.firstOrNull { it.parameterTypes.isEmpty() } ?: return null
+                val result = method.invoke(obj)
+                when (result) {
+                    null -> null
+                    is String -> result
+                    is Int -> result.toString()
+                    is Float -> result.toString()
+                    is Double -> result.toString()
+                    is Boolean -> result.toString()
+                    else -> storeObject(result)
+                }
+            } else {
+                val argsArray = JSONArray(argsJson)
+                val rawArgs = Array(argsArray.length()) { argsArray.get(it) }
+
+                val method = candidateMethods.firstOrNull { m ->
+                    val paramTypes = m.parameterTypes
+                    if (paramTypes.size != rawArgs.size) return@firstOrNull false
+                    paramTypes.withIndex().all { (i, type) ->
+                        try {
+                            isTypeCompatible(type, rawArgs[i])
+                        } catch (_: Throwable) {
+                            false
                         }
-            } ?: return null
+                    }
+                } ?: return null
 
-            val coercedArgs = method.parameterTypes.mapIndexed { i, type ->
-                coerceArg(type, rawArgs[i])
-            }.toTypedArray()
+                val coercedArgs = method.parameterTypes.mapIndexed { i, type ->
+                    coerceArg(type, rawArgs[i])
+                }.toTypedArray()
 
-            val result = method.invoke(obj, *coercedArgs)
-            when (result) {
-                is String -> result
-                null -> null
-                else -> storeObject(result)
+                val result = method.invoke(obj, *coercedArgs)
+                when (result) {
+                    null -> null
+                    is String -> result
+                    else -> storeObject(result)
+                }
             }
-        } catch (t: InvocationTargetException) {
-            console.error(t.targetException ?: t)
+        } catch (e: InvocationTargetException) {
+            console.error(e.targetException ?: e)
             null
-        } catch (t: Throwable) {
-            console.error(t)
+        } catch (e: Throwable) {
+            console.error(e)
             null
         }
     }
+
 
     @JavascriptInterface
     fun getField(objectId: String, fieldName: String): String? {

@@ -93,6 +93,10 @@ val d8Bin = androidHome?.let {
     File(it, "build-tools/35.0.0/d8" + if (isWindows) ".bat" else "").absolutePath
 }
 
+val adbBin = androidHome?.let {
+    File(it, "platform-tools/adb" + if (isWindows) ".exe" else "").absolutePath
+}
+
 val buildDir: File = project.layout.buildDirectory.get().asFile
 
 val classesJar =
@@ -106,6 +110,15 @@ fun d8(vararg args: String) {
     }
     exec {
         commandLine(d8Bin, *args)
+    }
+}
+
+fun adb(vararg args: String) {
+    if (adbBin == null) {
+        error("ANDROID_HOME or ANDROID_SDK_ROOT not set. Cannot locate adb.")
+    }
+    exec {
+        commandLine(adbBin, *args)
     }
 }
 
@@ -143,6 +156,12 @@ tasks.register("build-dex") {
 
         if (classesOutput.renameTo(dexOutput)) {
             println("DEX file created at: $dexOutput")
+            println("Pushing DEX file to device...")
+            adb(
+                "push",
+                dexOutput.absolutePath,
+                "/data/adb/modules/mmrl_wpd/webroot/plugins/wxu.dex"
+            )
         }
 
         val latestSo = findLatestSoFile()
@@ -151,6 +170,7 @@ tasks.register("build-dex") {
             copyTo.parentFile.mkdirs()
             latestSo.copyTo(copyTo, overwrite = true)
             println("Copied .so to: $copyTo")
+
         } else {
             println("No .so file found in intermediates.")
         }
