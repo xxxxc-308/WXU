@@ -20,7 +20,7 @@ class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
         Reflection::class.java,
         Module::class.java,
         Process::class.java,
-        Dialog::class.java
+        Dialog::class.java,
     )
 
     @JavascriptInterface
