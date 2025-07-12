@@ -4,3 +4,4 @@ export type {
   PreferenceValue,
   ChangeListener,
 } from "./classes/SharedPreferences";
+export { Context } from "./classes/Context";

@@ -1,3 +1,4 @@
+import { Context } from "./Context";
 import { JavaObject } from "./JavaObject";
 
 export type PreferenceValue = boolean | number | string;
@@ -10,10 +11,12 @@ export class SharedPreferences {
   #listeners: Map<string, ChangeListener> = new Map();
   #listenerProxy: JavaObject | null = null;
 
-  constructor(context: any, name: string, mode: number = 0) {
-    const contextObj =
-      context instanceof JavaObject ? context : JavaObject.fromObjId(context);
-    this.#prefsId = contextObj.call("getSharedPreferences", [name, mode]);
+  constructor(context: Context, name: string, mode: number = 0) {
+    if (!(context instanceof Context)) {
+      throw new TypeError("Context must be an instance of Context class.");
+    }
+
+    this.#prefsId = context.native.call("getSharedPreferences", [name, mode]);
   }
 
   #getEditor(): any {
