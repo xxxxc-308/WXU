@@ -3,7 +3,7 @@
  * The methods operate directly on the path associated with this instance. All
  * operations are synchronous and will block execution until they complete.
  */
-interface FileSystemInstance {
+export interface FileSystemInstance {
   /**
    * Reads the entire content of the file associated with this instance.
    *

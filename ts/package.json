@@ -1,0 +1,25 @@
+{
+  "name": "wxu",
+  "version": "0.0.63",
+  "type": "module",
+  "description": "WXU TypeScript Package",
+  "source": "src/index.ts",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "bun run build.ts",
+    "upload": "bun run build && npm publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0-only",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "bun-plugin-dts": "^0.3.0",
+    "tsc": "^2.0.4"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

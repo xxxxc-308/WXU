@@ -6,7 +6,7 @@
  * access shared Magisk directories, and manage its configuration in the
  * correct locations as dictated by the Magisk framework.
  */
-interface Module {
+export interface Module {
   /**
    * Gets the unique identifier of the module.
    * This ID is defined in the module's `module.prop` file and is used as the

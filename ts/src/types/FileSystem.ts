@@ -1,11 +1,13 @@
+import type { FileSystemInstance } from "./FileSystemInstance";
+
 /**
  * Defines a static-like interface for synchronous file system operations.
  * This interface provides a direct way to interact with the file system from a
  * sandboxed environment, like a WebView. All operations are synchronous and will
  * block execution until they complete. It serves as a factory for creating
-* FileSystemInstance objects and for performing operations on paths directly.
+ * FileSystemInstance objects and for performing operations on paths directly.
  */
-interface FileSystem {
+export interface FileSystem {
   /**
    * Creates a new FileSystemInstance for a given path. This instance can then be
    * used to perform operations on that specific file or directory.

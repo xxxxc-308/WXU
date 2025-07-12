@@ -8,7 +8,7 @@
  * It's handy for building cross-platform tools or system monitors where you need
  * to understand what's running on the device.
  */
-interface Process {
+export interface Process {
   /**
    * Returns the platform or rooting method this process is using on Android.
    * Knowing this helps when you want to adjust behavior based on how root access is provided.
