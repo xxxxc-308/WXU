@@ -136,6 +136,15 @@ export class JavaObject {
     return this.reflect.callMethod(objId, method, jsonArgs);
   }
 
+  public static callStaticMethod(
+    objId: string,
+    method: string,
+    args: Array<string | boolean | number> | null
+  ): string | null {
+    const jsonArgs = args == null ? "[]" : JSON.stringify(args);
+    return this.reflect.callStaticMethod(objId, method, jsonArgs);
+  }
+
   public static getField(objId: string, field: string): string | null {
     return this.reflect.getField(objId, field);
   }

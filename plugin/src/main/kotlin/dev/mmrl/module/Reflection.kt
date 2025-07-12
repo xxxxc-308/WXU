@@ -85,6 +85,36 @@ class Reflection(wxOptions: WXOptions) : WXUInterface(wxOptions) {
     }
 
     @JavascriptInterface
+    fun callStaticMethod(classId: String, methodName: String, argsJson: String?): String? {
+        return try {
+            val clazz = ReflectStore.getObject<Class<*>>(classId) ?: return null
+            val rawArgs = parseJsonArgs(argsJson)
+            val staticMethods = clazz.methods.filter {
+                it.name == methodName && java.lang.reflect.Modifier.isStatic(it.modifiers)
+            }
+
+            if (staticMethods.isEmpty()) {
+                console.error("No static method named '$methodName' found on class $classId")
+                return null
+            }
+
+            val signature = findMatchingCallable(staticMethods, rawArgs) ?: run {
+                console.error("No static method overload for '$methodName' matches provided args on class $classId")
+                return null
+            }
+
+            val result = signature.callable.invoke(null, *signature.coercedArgs)
+            toJsRepresentation(result, modId)
+        } catch (e: InvocationTargetException) {
+            console.error(e.targetException ?: e)
+            null
+        } catch (e: Throwable) {
+            console.error(e)
+            null
+        }
+    }
+
+    @JavascriptInterface
     fun getField(objectId: String, fieldName: String): String? {
         return try {
             val obj = ReflectStore.getObject<Any?>(objectId) ?: return null
