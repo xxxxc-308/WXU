@@ -1,11 +1,13 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "dev.mmrl"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
@@ -81,6 +83,11 @@ dependencies {
 
     compileOnly(libs.webui.x.portable)
     compileOnly(libs.mmrl.platform)
+
+    compileOnly(libs.square.retrofit.moshi)
+    compileOnly(libs.square.retrofit.kotlinxSerialization)
+    compileOnly(libs.square.moshi)
+    ksp(libs.square.moshi.kotlin)
 }
 
 // Optional D8 build task — unchanged
@@ -90,7 +97,7 @@ val androidHome: String? = System.getenv("ANDROID_HOME")
 val isWindows = System.getProperty("os.name").lowercase().contains("win")
 
 val d8Bin = androidHome?.let {
-    File(it, "build-tools/35.0.0/d8" + if (isWindows) ".bat" else "").absolutePath
+    File(it, "build-tools/${android.compileSdkVersion?.replace("android-", "")}.0.0/d8" + if (isWindows) ".bat" else "").absolutePath
 }
 
 val adbBin = androidHome?.let {

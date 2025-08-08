@@ -3,11 +3,25 @@ agp = "8.5.1"
 gradle = "8.1.4"
 platform = "v33773"
 webuiXPortable = "v61"
+ksp = "2.0.0-1.0.21"
+squareRetrofit = "2.11.0"
+squareMoshi = "1.15.1"
+kotlinVersion = "1.9.0"
+kotlin = "2.0.0"
 
 [libraries]
+ksp-gradle = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 mmrl-platform = { module = "com.github.MMRLApp.MMRL:platform", version.ref = "platform" }
 webui-x-portable = { module = "com.github.MMRLApp:WebUI-X-Portable", version.ref = "webuiXPortable" }
+square-retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "squareRetrofit" }
+square-retrofit-kotlinxSerialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "squareRetrofit" }
+square-moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "squareMoshi" }
+square-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "squareMoshi" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
