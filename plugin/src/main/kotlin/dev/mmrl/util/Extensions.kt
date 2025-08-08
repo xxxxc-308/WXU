@@ -1,0 +1,41 @@
+package dev.mmrl.util
+
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.util.Base64
+import com.dergoogler.mmrl.webui.moshi
+import java.io.ByteArrayOutputStream
+import androidx.core.graphics.createBitmap
+
+fun <T> List<T>?.toJsonString(): String {
+    if (this == null) return "[]"
+
+    val adapter = moshi.adapter(List::class.java)
+    return adapter.toJson(this) ?: "[]"
+}
+
+fun getDrawableBase64(drawable: Drawable, quality: Int = 100): String {
+    val bitmap = drawable.toBitmap()
+
+    val outputStream = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.PNG, quality, outputStream)
+    val byteArray = outputStream.toByteArray()
+
+    return Base64.encodeToString(byteArray, Base64.NO_WRAP)
+}
+
+private fun Drawable.toBitmap(): Bitmap {
+    if (this is BitmapDrawable) {
+        return this.bitmap
+    }
+
+    val width = this.intrinsicWidth.takeIf { it > 0 } ?: 1
+    val height = this.intrinsicHeight.takeIf { it > 0 } ?: 1
+    val bitmap = createBitmap(width, height)
+    val canvas = Canvas(bitmap)
+    this.setBounds(0, 0, canvas.width, canvas.height)
+    this.draw(canvas)
+    return bitmap
+}

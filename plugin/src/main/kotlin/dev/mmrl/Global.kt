@@ -9,6 +9,7 @@ import dev.mmrl.internal.WXUInterface
 import dev.mmrl.module.Dialog
 import dev.mmrl.module.FileSystem
 import dev.mmrl.module.Module
+import dev.mmrl.module.PackageManager
 import dev.mmrl.module.Process
 import dev.mmrl.module.Reflection
 
@@ -21,6 +22,7 @@ class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
         Module::class.java,
         Process::class.java,
         Dialog::class.java,
+        PackageManager::class.java
     )
 
     @JavascriptInterface
