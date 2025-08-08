@@ -41,7 +41,7 @@ jobs:
         run: chmod 755 ./gradlew && ./gradlew --no-daemon build-dex
 
       - name: Build Dex
-        run: ls plugin && ls plugin/build
+        run: ls plugin/build
 
       - name: Upload classes.dex Artifact
         uses: actions/upload-artifact@v4
