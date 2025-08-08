@@ -44,4 +44,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: wxu-plugin-dex
-          path: /home/runner/work/WXU/WXU/plugin/build/wxu.dex
+          path: plugin/build/wxu.dex
