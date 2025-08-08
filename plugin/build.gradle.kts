@@ -90,14 +90,30 @@ dependencies {
     ksp(libs.square.moshi.kotlin)
 }
 
-// Optional D8 build task — unchanged
+interface InjectedExecOps {
+    @get:Inject
+    val execOps: ExecOperations
+}
+
+val Task.injected get() = project.objects.newInstance<InjectedExecOps>()
+fun Task.exec(action: Action<in ExecSpec>): ExecResult = injected.execOps.exec(action)
+
 val androidHome: String? = System.getenv("ANDROID_HOME")
     ?: System.getenv("ANDROID_SDK_ROOT")
 
 val isWindows = System.getProperty("os.name").lowercase().contains("win")
+val isCI = System.getenv("CI") == "true"
 
 val d8Bin = androidHome?.let {
-    File(it, "build-tools/${android.compileSdkVersion?.replace("android-", "")}.0.0/d8" + if (isWindows) ".bat" else "").absolutePath
+    File(
+        it,
+        "build-tools/${
+            android.compileSdkVersion?.replace(
+                "android-",
+                ""
+            )
+        }.0.0/d8" + if (isWindows) ".bat" else ""
+    ).absolutePath
 }
 
 val adbBin = androidHome?.let {
@@ -111,19 +127,26 @@ val classesJar =
 val classesOutput = buildDir.resolve("classes.dex")
 val dexOutput = buildDir.resolve("wxu.dex")
 
-fun d8(vararg args: String) {
+fun Task.d8(vararg args: String) {
     if (d8Bin == null) {
         error("ANDROID_HOME or ANDROID_SDK_ROOT not set. Cannot locate d8.")
     }
+
     exec {
         commandLine(d8Bin, *args)
     }
 }
 
-fun adb(vararg args: String) {
+fun Task.adb(vararg args: String) {
+    if (isCI) {
+        print("ADB can't run in CI environment.")
+        return
+    }
+
     if (adbBin == null) {
         error("ANDROID_HOME or ANDROID_SDK_ROOT not set. Cannot locate adb.")
     }
+
     exec {
         commandLine(adbBin, *args)
     }
@@ -163,12 +186,15 @@ tasks.register("build-dex") {
 
         if (classesOutput.renameTo(dexOutput)) {
             println("DEX file created at: $dexOutput")
-            println("Pushing DEX file to device...")
-            adb(
-                "push",
-                dexOutput.absolutePath,
-                "/data/adb/modules/mmrl_wpd/webroot/plugins/wxu.dex"
-            )
+
+            if (!isCI) {
+                println("Pushing DEX file to device...")
+                adb(
+                    "push",
+                    dexOutput.absolutePath,
+                    "/data/adb/modules/mmrl_wpd/webroot/plugins/wxu.dex"
+                )
+            }
         }
 
         val latestSo = findLatestSoFile()
@@ -177,11 +203,14 @@ tasks.register("build-dex") {
             copyTo.parentFile.mkdirs()
             latestSo.copyTo(copyTo, overwrite = true)
             println("Copied .so to: $copyTo")
-            adb(
-                "push",
-                latestSo.absolutePath,
-                "/data/adb/modules/mmrl_wpd/webroot/shared/libnative.so"
-            )
+
+            if (!isCI) {
+                adb(
+                    "push",
+                    latestSo.absolutePath,
+                    "/data/adb/modules/mmrl_wpd/webroot/shared/libnative.so"
+                )
+            }
         } else {
             println("No .so file found in intermediates.")
         }
