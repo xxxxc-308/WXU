@@ -2,7 +2,7 @@
 agp = "8.5.1"
 gradle = "8.11.1"
 platform = "v33773"
-webuiXPortable = "v61"
+webuiXPortable = "eadac7d018"
 ksp = "2.0.0-1.0.21"
 squareRetrofit = "2.11.0"
 squareMoshi = "1.15.1"
