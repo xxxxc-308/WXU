@@ -18,7 +18,7 @@ To get started with the plugin integration, create a file named `config.json` wi
 
 Here's an example of what your `config.json` file should look like:
 
-```json
+```jsonc
 {
   "dexFiles": [
     {
@@ -26,9 +26,19 @@ Here's an example of what your `config.json` file should look like:
       "path": "plugins/webui.dex",
       "className": "dev.mmrl.Global"
     }
-  ]
+  ],
+  // available from version 215
+  "extra": {
+    // package manager module
+    "pm": {
+      // enables the https://mui.kernelsu.org/.package/<name>/info.json and https://mui.kernelsu.org/.package/<name>/icon.(jpe?g|png|webp) URL 
+      "allowUrlPackageFetch": true
+    }
+  }
 }
 ```
+
+> Make sure to remove the comments from the JSON be usage.
 
 ## Usage
 
