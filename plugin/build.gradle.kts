@@ -47,6 +47,7 @@ android {
 
     buildFeatures {
         compose = true
+        aidl = true
     }
 
     composeOptions {
@@ -152,10 +153,35 @@ fun Task.adb(vararg args: String) {
     }
 }
 
-fun findLatestSoFile(): File? {
+fun findLatestNativeLib(libName: String, abi: String = "arm64-v8a"): File? {
     return buildDir.resolve("intermediates/cxx/Debug").walkTopDown()
-        .filter { it.isFile && it.name == "libnative.so" && "arm64-v8a" in it.path }
+        .filter {
+            it.isFile &&
+                    it.name == libName &&
+                    (abi in it.path)
+        }
         .maxByOrNull { it.lastModified() }
+}
+
+fun Task.copyAndPushNativeLibs(vararg files: File?) {
+    for (file in files) {
+        if (file != null) {
+            val copyTo = buildDir.resolve(file.name)
+            copyTo.parentFile.mkdirs()
+            file.copyTo(copyTo, overwrite = true)
+            println("Copied ${file.path} to: $copyTo")
+
+            if (!isCI) {
+                adb(
+                    "push",
+                    file.absolutePath,
+                    "/data/adb/modules/mmrl_wpd/webroot/shared/${file.name}"
+                )
+            }
+        } else {
+            println("No .so file found in intermediates.")
+        }
+    }
 }
 
 tasks.register("build-dex") {
@@ -197,22 +223,8 @@ tasks.register("build-dex") {
             }
         }
 
-        val latestSo = findLatestSoFile()
-        if (latestSo != null) {
-            val copyTo = buildDir.resolve("libnative.so")
-            copyTo.parentFile.mkdirs()
-            latestSo.copyTo(copyTo, overwrite = true)
-            println("Copied .so to: $copyTo")
-
-            if (!isCI) {
-                adb(
-                    "push",
-                    latestSo.absolutePath,
-                    "/data/adb/modules/mmrl_wpd/webroot/shared/libnative.so"
-                )
-            }
-        } else {
-            println("No .so file found in intermediates.")
-        }
+        copyAndPushNativeLibs(
+            findLatestNativeLib("libnative.so"),
+        )
     }
 }
