@@ -26,7 +26,7 @@ fun getDrawableBase64(drawable: Drawable, quality: Int = 100): String {
     return Base64.encodeToString(byteArray, Base64.NO_WRAP)
 }
 
-private fun Drawable.toBitmap(): Bitmap {
+fun Drawable.toBitmap(): Bitmap {
     if (this is BitmapDrawable) {
         return this.bitmap
     }
@@ -38,4 +38,13 @@ private fun Drawable.toBitmap(): Bitmap {
     this.setBounds(0, 0, canvas.width, canvas.height)
     this.draw(canvas)
     return bitmap
+}
+
+inline fun <reified T> Map<String, Any?>?.getProp(key: String, def: T): T {
+    val value = this?.get(key)
+    return if (value is T) {
+        value
+    } else {
+        def
+    }
 }
