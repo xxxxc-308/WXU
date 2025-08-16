@@ -45,7 +45,7 @@ Here's an example of what your `config.json` file should look like:
 [Types Folder](./types)
 
 ```ts
-type Module = FileSystem | Reflect | Process | Module;
+type Module = FileSystem | Reflect | Process | Module | PackageManager;
 
 interface Global {
   require(module: string): Module | null;
@@ -58,4 +58,5 @@ const fs: FileSystem = global.require("wx:fs");
 const reflect: Reflect = global.require("wx:reflect");
 const process: Process = global.require("wx:process");
 const module: Module = global.require("wx:module");
+const pm: PackageManager = global.require("wx:pm");
 ```
