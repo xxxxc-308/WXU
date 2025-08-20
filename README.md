@@ -31,7 +31,7 @@ Here's an example of what your `config.json` file should look like:
   "extra": {
     // package manager module
     "pm": {
-      // enables the https://mui.kernelsu.org/.package/<name>/info.json and https://mui.kernelsu.org/.package/<name>/icon.(jpe?g|png|webp) URL 
+      // enables the https://mui.kernelsu.org/.package/<name>/info.json and https://mui.kernelsu.org/.package/<name>/icon.(jpe?g|png|webp) URL
       "allowUrlPackageFetch": true
     }
   }
@@ -45,7 +45,7 @@ Here's an example of what your `config.json` file should look like:
 [Types Folder](./types)
 
 ```ts
-type Module = FileSystem | Reflect | Process | Module | PackageManager;
+type Module = FileSystem | Reflect | Process | Module | PackageManager | Pty.Shell;
 
 interface Global {
   require(module: string): Module | null;
@@ -59,4 +59,6 @@ const reflect: Reflect = global.require("wx:reflect");
 const process: Process = global.require("wx:process");
 const module: Module = global.require("wx:module");
 const pm: PackageManager = global.require("wx:pm");
+// Requires at least WebUI X v213 
+const pty: Pty.Shell = global.require("wx:pty");
 ```
