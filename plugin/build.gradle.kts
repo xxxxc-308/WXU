@@ -82,8 +82,9 @@ dependencies {
     compileOnly("androidx.compose.ui:ui:1.6.7")
     compileOnly("androidx.compose.material3:material3:1.2.1")
 
-    compileOnly(libs.webui.x.portable)
+    compileOnly(libs.mmrl.webui)
     compileOnly(libs.mmrl.platform)
+    compileOnly(libs.mmrl.jna)
 
     compileOnly(libs.square.retrofit.moshi)
     compileOnly(libs.square.retrofit.kotlinxSerialization)
@@ -127,6 +128,8 @@ val classesJar =
     buildDir.resolve("intermediates/aar_main_jar/release/syncReleaseLibJars/classes.jar")
 val classesOutput = buildDir.resolve("classes.dex")
 val dexOutput = buildDir.resolve("wxu.dex")
+
+val targetModule = "bindhosts"
 
 fun Task.d8(vararg args: String) {
     if (d8Bin == null) {
@@ -175,7 +178,7 @@ fun Task.copyAndPushNativeLibs(vararg files: File?) {
                 adb(
                     "push",
                     file.absolutePath,
-                    "/data/adb/modules/mmrl_wpd/webroot/shared/${file.name}"
+                    "/data/adb/modules/$targetModule/webroot/shared/${file.name}"
                 )
             }
         } else {
@@ -218,7 +221,7 @@ tasks.register("build-dex") {
                 adb(
                     "push",
                     dexOutput.absolutePath,
-                    "/data/adb/modules/mmrl_wpd/webroot/plugins/wxu.dex"
+                    "/data/adb/modules/$targetModule/webroot/plugins/wxu.dex"
                 )
             }
         }

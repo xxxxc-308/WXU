@@ -1,8 +1,8 @@
 [versions]
 agp = "8.5.1"
 gradle = "8.11.1"
-platform = "a68565ba34"
-webuiXPortable = "fcf72b42b6"
+mmrl = "a68565ba34"
+wxp = "953fad192a"
 ksp = "2.0.0-1.0.21"
 squareRetrofit = "2.11.0"
 squareMoshi = "1.15.1"
@@ -12,8 +12,9 @@ kotlin = "2.0.0"
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
-mmrl-platform = { module = "com.github.MMRLApp.MMRL:platform", version.ref = "platform" }
-webui-x-portable = { module = "com.github.MMRLApp:WebUI-X-Portable", version.ref = "webuiXPortable" }
+mmrl-platform = { group = "com.github.MMRLApp.MMRL", name = "platform", version.ref = "mmrl" }
+mmrl-webui = { group = "com.github.MMRLApp.WebUI-X-Portable", name = "webui", version.ref = "wxp" }
+mmrl-jna = { group = "com.github.MMRLApp.WebUI-X-Portable", name = "jna", version.ref = "wxp" }
 square-retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "squareRetrofit" }
 square-retrofit-kotlinxSerialization = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "squareRetrofit" }
 square-moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "squareMoshi" }
