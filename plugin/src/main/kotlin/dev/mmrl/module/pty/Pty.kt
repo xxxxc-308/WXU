@@ -16,6 +16,7 @@ class Pty(wxOptions: WXOptions) : WXUInterface(wxOptions) {
     private var currentRows = 24
 
     override var name = "pty"
+    override val minVersion: Long = 213
 
     @JavascriptInterface
     fun start(sh: String, argsJson: String?, envJson: String?): Instance? {
