@@ -129,7 +129,7 @@ val classesJar =
 val classesOutput = buildDir.resolve("classes.dex")
 val dexOutput = buildDir.resolve("wxu.dex")
 
-val targetModule = "bindhosts"
+val targetModule = "wx_pty_x"
 
 fun Task.d8(vararg args: String) {
     if (d8Bin == null) {
@@ -226,8 +226,9 @@ tasks.register("build-dex") {
             }
         }
 
-        copyAndPushNativeLibs(
+        /*copyAndPushNativeLibs(
             findLatestNativeLib("libnative.so"),
-        )
+            findLatestNativeLib("libpty.so"),
+        )*/
     }
 }

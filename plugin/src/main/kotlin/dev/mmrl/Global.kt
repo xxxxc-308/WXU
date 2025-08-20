@@ -3,8 +3,6 @@
 package dev.mmrl
 
 import android.webkit.JavascriptInterface
-import com.dergoogler.mmrl.platform.file.SuFile.Companion.toSuFile
-import com.dergoogler.mmrl.webui.handler.suPathHandler
 import com.dergoogler.mmrl.webui.interfaces.WXInterface
 import com.dergoogler.mmrl.webui.interfaces.WXOptions
 import dev.mmrl.internal.WXUInterface
@@ -15,6 +13,7 @@ import dev.mmrl.module.PackageManager
 import dev.mmrl.module.PackageManager.Companion.packagePathHandler
 import dev.mmrl.module.Process
 import dev.mmrl.module.Reflection
+import dev.mmrl.module.pty.Pty
 import dev.mmrl.util.getProp
 
 class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
@@ -26,7 +25,8 @@ class Global(wxOptions: WXOptions) : WXInterface(wxOptions) {
         Module::class.java,
         Process::class.java,
         Dialog::class.java,
-        PackageManager::class.java
+        PackageManager::class.java,
+        Pty::class.java
     )
 
     @JavascriptInterface
