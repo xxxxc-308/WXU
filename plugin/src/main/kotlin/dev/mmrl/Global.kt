@@ -2,7 +2,6 @@
 
 package dev.mmrl
 
-import android.R.attr.versionCode
 import android.webkit.JavascriptInterface
 import androidx.core.content.pm.PackageInfoCompat
 import com.dergoogler.mmrl.platform.PlatformManager
